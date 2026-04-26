@@ -1,0 +1,61 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# Flask instance folder (for local configs, uploads, etc.)
+instance/
+*.db
+*.sqlite3
+
+# Hugging Face cache and models
+# Transformers cache
+huggingface/
+.cache/
+transformers_cache/
+datasets_cache/
+tokenizers_cache/
+
+# Logs
+*.log
+logs/
+*.out
+
+# Unit test / coverage reports
+.coverage
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+*.manifest
+*.spec
+
+# Misc
+.DS_Store
+Thumbs.db

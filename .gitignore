@@ -25,6 +25,10 @@ transformers_cache/
 datasets_cache/
 tokenizers_cache/
 
+# Logs
+*.log
+logs/
+*.out
 
 # Unit test / coverage reports
 .coverage

@@ -1,7 +1,0 @@
-group_id,scene_name,class_name,count,duration_s,generated_at
-group_01,Dakar - Scène 1,person,0,559.93,2026-04-26T23:14:35.776549
-group_01,Dakar - Scène 1,bicycle,0,559.93,2026-04-26T23:14:35.776549
-group_01,Dakar - Scène 1,car,10,559.93,2026-04-26T23:14:35.776549
-group_01,Dakar - Scène 1,motorcycle,0,559.93,2026-04-26T23:14:35.776549
-group_01,Dakar - Scène 1,bus,0,559.93,2026-04-26T23:14:35.776549
-group_01,Dakar - Scène 1,truck,0,559.93,2026-04-26T23:14:35.776549

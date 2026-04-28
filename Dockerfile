@@ -29,6 +29,11 @@ COPY . /app
 # Ensure writable directories exist
 RUN mkdir -p /app/uploads /app/outputs /app/outputs/logs /app/models
 
+# If there are model files in the repo's `models/` directory, copy them explicitly
+# into the image so deployments that include a model will have it available at
+# runtime under `/app/models`.
+COPY models /app/models
+
 # Copy entrypoint and make it executable
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh

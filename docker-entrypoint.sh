@@ -28,4 +28,13 @@ if [ "${1#-}" != "$1" ]; then
   set -- gunicorn --workers 2 --threads 2 --bind 0.0.0.0:${PORT:-5000} run:app
 fi
 
-exec "$@"
+# If any of the arguments contain unexpanded shell-style variables (like ${PORT}),
+# join them into a single command string and eval it so environment variables
+# are expanded before exec. This avoids passing literal `${PORT:-5000}` to gunicorn
+# when Docker provided CMD as a JSON array (which doesn't expand shell vars).
+cmd="$*"
+if echo "$cmd" | grep -q '\${'; then
+  eval "exec $cmd"
+else
+  exec "$@"
+fi

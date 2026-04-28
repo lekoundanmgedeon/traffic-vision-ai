@@ -22,7 +22,7 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 OUTPUT_FOLDER = os.path.join(BASE_DIR, "outputs")
 LOGS_FOLDER   = os.path.join(BASE_DIR, "outputs", "logs")
 ALLOWED_EXTS  = {"mp4", "avi", "mov", "mkv", "webm"}
-MODEL_PATH    = os.path.join(BASE_DIR, "models", "best.pt")
+MODEL_PATH    = os.path.join(BASE_DIR, "models", "yolo11s.pt")
 
 bp = Blueprint("main", __name__)
 

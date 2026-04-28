@@ -7,3 +7,4 @@ flask>=3.0.0              # Serveur web
 opencv-python-headless>=4.9.0  # Traitement vidéo (sans GUI Qt)
 numpy>=1.26.0             # Calculs matriciels
 Werkzeug>=3.0.0           # Upload sécurisé (inclus avec Flask)
+gunicorn>=20.1.0         # Production process manager / WSGI server

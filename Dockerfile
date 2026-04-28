@@ -1,21 +1,42 @@
-FROM python:3.12-slim
+FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y \
-    libgl1 libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-RUN useradd -m -u 1000 user
-USER user
-ENV PATH="/home/user/.local/bin:$PATH"
+# Install system dependencies required by OpenCV and ffmpeg
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends \
+	   build-essential \
+	   ffmpeg \
+	   libgl1 \
+	   libglib2.0-0 \
+	   libsm6 \
+	   libxrender1 \
+	   libxext6 \
+	&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY --chown=user requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy only requirements first to leverage Docker cache
+COPY requirements.txt /app/requirements.txt
 
-COPY --chown=user . /app
+# Install Python dependencies and gunicorn for production
+RUN pip install --no-cache-dir -r /app/requirements.txt gunicorn
 
-RUN mkdir -p uploads outputs/logs models
+# Copy application source
+COPY . /app
 
-EXPOSE 7860
-CMD ["python", "run.py"]
+# Ensure writable directories exist
+RUN mkdir -p /app/uploads /app/outputs /app/outputs/logs /app/models
+
+# Copy entrypoint and make it executable
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
+# Expose default Flask port; hosting platforms often set $PORT at runtime
+EXPOSE 5000
+
+# Use entrypoint to optionally download a model at startup then exec the CMD
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["gunicorn","--workers","2","--threads","2","--bind","0.0.0.0:${PORT:-5000}","run:app"]
+

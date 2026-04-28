@@ -238,6 +238,52 @@ To merge logs from multiple groups, place all JSON files in `outputs/logs/`.
 - 🎯 Fine-tuning YOLO on Dakar-specific traffic data
 - 📱 Mobile-responsive interface improvements
 
+
+ 
+---
+
+## Docker & Deployment
+
+This project includes a production-ready `Dockerfile`, a `docker-entrypoint.sh` startup helper, and a `.dockerignore` to keep images small. The container runs the Flask app under `gunicorn` and binds to the platform-provided `PORT` environment variable (default `5000`).
+
+Quick local build & run
+
+Build the image (run from project root):
+
+```bash
+docker build -t traffic-vision:latest .
+```
+
+Run the container exposing port 5000 locally:
+
+```bash
+# Simple run (uses bundled model if present)
+docker run --rm -p 5000:5000 traffic-vision:latest
+
+# If you want the container to download a model at startup, provide MODEL_URL:
+docker run --rm -e MODEL_URL="https://.../yolo11s.pt" -p 5000:5000 traffic-vision:latest
+```
+
+Notes:
+- The image will not include large model weight files by default (`.dockerignore` excludes `models/*.pt`). Place weights into the `models/` directory or set `MODEL_URL` to download them on first start.
+- If you mount a host directory with models, run with `-v $(pwd)/models:/app/models`.
+
+Deploying on Render
+
+- Use Render's Docker service and point it to this repository. Render provides the `PORT` environment variable; the container uses `${PORT:-5000}` so it will bind correctly.
+- In the Render service settings, add an environment variable `MODEL_URL` if you want Render to download model files at startup. Alternatively, add the model to your repo or host it in an object store and mount it.
+
+Deploying to Hugging Face Spaces
+
+- Hugging Face Spaces support Docker-based deployments. Use the repository Dockerfile and set the `PORT` env var if required by the Space (Spaces set it automatically).
+- Keep the image as small as possible: prefer downloading weights at startup (`MODEL_URL`) or using a remote model registry (Hugging Face Hub) rather than committing large `.pt` files to the repository.
+
+Healthchecks and tips
+
+- Consider adding a simple health endpoint (e.g. `/api/stats`) as a healthcheck path in Render or Spaces.
+- Use a small number of `gunicorn` workers on limited cloud resources (the Dockerfile uses `--workers 2 --threads 2`). Tune according to your target CPU/RAM.
+
+
 ---
 
 ## License

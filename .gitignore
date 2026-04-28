@@ -55,6 +55,7 @@ dist/
 .eggs/
 *.manifest
 *.spec
+*.mp4
 
 # Misc
 .DS_Store

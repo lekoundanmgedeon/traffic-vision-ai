@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Traffic Monitor — CV Project</title>
+  <title>Traffic Monitor — CV Project 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -273,14 +273,15 @@
   </div>
   <nav class="nav-links">
     <a href="/">Home</a>
+    <a href="/webcam">📷 Live Camera</a>
     <a href="/dashboard">Dashboard</a>
   </nav>
 </header>
 
 <div class="hero">
   <div class="hero-badge">YOLOv11 + ByteTrack + Flask</div>
-  <h2>Detection & counting<br/><span>of road traffic</span></h2>
-  <p>Upload a video, choose the classes to detect, and view the real-time tracking.</p>
+  <h2>Detection & counting<br/><span>of road traffic objects</span></h2>
+  <p>Upload a video, choose the object classes to detect, and visualize tracking results in real time.</p>
 </div>
 
 <div class="stats-bar">
@@ -298,9 +299,9 @@
 
   <form action="/upload" method="POST" enctype="multipart/form-data" id="upload-form">
 
-    <!-- Upload vidéo -->
+    <!-- Video upload -->
     <div class="card">
-      <div class="card-title">Source video</div>
+      <div class="card-title">Video source</div>
       <div class="drop-zone" id="drop-zone">
         <input type="file" name="video" id="file-input" accept="video/*" onchange="onFileSelected(this)"/>
         <div class="drop-icon">🎬</div>
@@ -311,7 +312,7 @@
 
       {% if videos %}
       <div style="margin-top:1.2rem;">
-        <div class="card-title" style="margin-bottom:.8rem;">Videos already uploaded</div>
+        <div class="card-title" style="margin-bottom:.8rem;">Already uploaded videos</div>
         <div class="video-list">
           {% for v in videos %}
           <div class="video-item" onclick="selectExisting('{{ v }}', this)">
@@ -325,15 +326,15 @@
       {% endif %}
     </div>
 
-    <!-- Nom de scène -->
+    <!-- Scene name (optional) -->
     <div class="card">
-      <div class="card-title">Scene name</div>
+      <div class="card-title">Scene name <span style="color:var(--muted);font-size:.7rem;">(optional — defaults to video filename)</span></div>
       <input type="text" name="scene_name" class="scene-input"
-             placeholder="Ex: Dakar - Rond-point Étoile, Intersection Fann..."
-             value="Dakar - Scène 1"/>
+             placeholder="e.g. Dakar - Roundabout, Highway intersection... (leave blank for auto)"
+             id="scene-input"/>
     </div>
 
-    <!-- Classes à détecter -->
+    <!-- Classes to detect -->
     <div class="card">
       <div class="card-title">Classes to track</div>
       <div class="classes-grid">
@@ -355,7 +356,7 @@
       </div>
     </div>
 
-    <button type="submit" class="btn-submit">▶ Launch Detection</button>
+    <button type="submit" class="btn-submit">▶ Start Detection</button>
 
   </form>
 </main>
@@ -368,19 +369,36 @@
   dz.addEventListener('drop', e => {
     e.preventDefault(); dz.classList.remove('dragover');
     const f = e.dataTransfer.files[0];
-    if (f) { document.getElementById('file-input').files = e.dataTransfer.files; onFileSelected({files:[f]}); }
+    if (f) {
+      document.getElementById('file-input').files = e.dataTransfer.files;
+      onFileSelected({files:[f]});
+      // Désélectionner toute vidéo existante
+      document.querySelectorAll('.video-item').forEach(e => e.classList.remove('selected'));
+      document.getElementById('existing-video').value = '';
+    }
   });
 
   function onFileSelected(input) {
     const f = input.files[0];
-    if (f) document.getElementById('file-label').textContent = '✓ ' + f.name;
+    if (f) {
+      document.getElementById('file-label').textContent = '✓ ' + f.name;
+      // Désélectionner toute vidéo existante
+      document.querySelectorAll('.video-item').forEach(e => e.classList.remove('selected'));
+      document.getElementById('existing-video').value = '';
+    }
   }
 
   function selectExisting(name, el) {
+    // Sélectionner visuellement
     document.querySelectorAll('.video-item').forEach(e => e.classList.remove('selected'));
     el.classList.add('selected');
+
+    // Mettre le nom dans le champ caché
     document.getElementById('existing-video').value = name;
-    document.getElementById('file-label').textContent = '✓ Selected : ' + name;
+
+    // Vider le file input pour éviter le conflit
+    document.getElementById('file-input').value = '';
+    document.getElementById('file-label').textContent = '✓ Selected: ' + name;
   }
 </script>
 

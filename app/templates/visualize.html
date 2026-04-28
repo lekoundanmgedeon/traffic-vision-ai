@@ -153,6 +153,21 @@
       </svg>
     </div>
 
+    <!-- Download logs -->
+    <div class="card">
+      <div class="card-title">Download logs</div>
+      <div style="display:flex;gap:.6rem;">
+        <a href="/download_logs?format=json"
+           style="flex:1;text-align:center;padding:.7rem;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:8px;color:#00d4ff;text-decoration:none;font-size:.8rem;font-weight:600;">
+          ⬇ JSON
+        </a>
+        <a href="/download_logs?format=csv"
+           style="flex:1;text-align:center;padding:.7rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:8px;color:#10b981;text-decoration:none;font-size:.8rem;font-weight:600;">
+          ⬇ CSV
+        </a>
+      </div>
+    </div>
+
     <!-- Dashboard link -->
     <a href="/dashboard" style="display:block;text-align:center;padding:.9rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--accent);text-decoration:none;font-size:.85rem;font-weight:600;transition:border-color .2s;"
        onmouseover="this.style.borderColor='var(--accent)'"
